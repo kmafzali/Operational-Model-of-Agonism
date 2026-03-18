@@ -11,221 +11,145 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --color-bg:               #f8f9fb;
-    --color-bg-panel:         #ffffff;
-    --color-bg-secondary:     #f0f2f5;
-    --color-bg-stat:          #f4f6f9;
-    --color-text-primary:     #111827;
-    --color-text-secondary:   #374151;
-    --color-text-muted:       #6b7280;
-    --color-text-tertiary:    #9ca3af;
-    --color-border:           rgba(0,0,0,0.10);
-    --color-border-secondary: rgba(0,0,0,0.20);
-    --color-accent:           #1e3a5f;
-    --radius-md:              8px;
-    --radius-lg:              14px;
-    --font-mono:              'Courier New', monospace;
-    --shadow-sm:              0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.05);
-    --shadow-md:              0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+    --bg:         #f8f9fb;
+    --bg-panel:   #ffffff;
+    --bg-sec:     #f0f2f5;
+    --bg-stat:    #f4f6f9;
+    --txt:        #111827;
+    --txt-sec:    #374151;
+    --txt-muted:  #6b7280;
+    --txt-dim:    #9ca3af;
+    --border:     rgba(0,0,0,0.10);
+    --border-sec: rgba(0,0,0,0.20);
+    --accent:     #1a56db;
+    --r-md: 8px; --r-lg: 14px;
+    --mono: 'Courier New', monospace;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.07);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
   }
-
   @media (prefers-color-scheme: dark) {
     :root {
-      --color-bg:               #111827;
-      --color-bg-panel:         #1f2937;
-      --color-bg-secondary:     #1f2937;
-      --color-bg-stat:          #283548;
-      --color-text-primary:     #f9fafb;
-      --color-text-secondary:   #e5e7eb;
-      --color-text-muted:       #9ca3af;
-      --color-text-tertiary:    #6b7280;
-      --color-border:           rgba(255,255,255,0.08);
-      --color-border-secondary: rgba(255,255,255,0.18);
-      --color-accent:           #93c5fd;
-      --shadow-sm:              0 1px 3px rgba(0,0,0,0.3);
-      --shadow-md:              0 4px 12px rgba(0,0,0,0.4);
+      --bg:#111827; --bg-panel:#1f2937; --bg-sec:#1f2937; --bg-stat:#283548;
+      --txt:#f9fafb; --txt-sec:#e5e7eb; --txt-muted:#9ca3af; --txt-dim:#6b7280;
+      --border:rgba(255,255,255,0.08); --border-sec:rgba(255,255,255,0.18);
+      --accent:#93c5fd;
     }
   }
 
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-    background: var(--color-bg);
-    color: var(--color-text-primary);
-    padding: 28px 24px 48px;
-    min-height: 100vh;
-    line-height: 1.5;
+    background: var(--bg); color: var(--txt);
+    padding: 28px 24px 56px; min-height: 100vh; line-height: 1.5;
   }
+  .outer { max-width: 1440px; margin: 0 auto; }
 
-  .outer { max-width: 1140px; margin: 0 auto; }
+  .page-header { text-align:center; margin-bottom:28px; padding-bottom:20px; border-bottom:1px solid var(--border); }
+  .page-header h1 { font-size:26px; font-weight:700; color:var(--txt); letter-spacing:-0.02em; margin-bottom:7px; }
+  .page-header p  { font-size:14px; color:var(--txt-muted); }
 
-  /* ── Page header ── */
-  .page-header {
-    text-align: center;
-    margin-bottom: 28px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid var(--color-border);
-  }
-  .page-header h1 {
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--color-text-primary);
-    letter-spacing: -0.02em;
-    margin-bottom: 6px;
-  }
-  .page-header p {
-    font-size: 14px;
-    color: var(--color-text-muted);
-  }
+  .layout { display:grid; grid-template-columns:300px 1fr; gap:24px; align-items:start; }
 
-  .layout {
-    display: grid;
-    grid-template-columns: 285px 1fr;
-    gap: 22px;
-    align-items: start;
-  }
+  .panel { background:var(--bg-panel); border-radius:var(--r-lg); padding:16px 18px; margin-bottom:14px; border:1px solid var(--border); box-shadow:var(--shadow-sm); }
+  .section-head { font-size:11px; font-weight:700; color:var(--txt-muted); letter-spacing:.08em; text-transform:uppercase; margin-bottom:14px; padding-bottom:8px; border-bottom:1px solid var(--border); }
 
-  /* ── Panels ── */
-  .panel {
-    background: var(--color-bg-panel);
-    border-radius: var(--radius-lg);
-    padding: 16px 18px;
-    margin-bottom: 14px;
-    border: 1px solid var(--color-border);
-    box-shadow: var(--shadow-sm);
-  }
-  .section-head {
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--color-text-muted);
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    margin-bottom: 14px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  /* ── Controls ── */
-  .ctrl-row { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
-  .ctrl-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
-  .ctrl-label { font-size: 13px; color: var(--color-text-secondary); font-weight: 400; }
+  .ctrl-row { display:flex; flex-direction:column; gap:5px; margin-bottom:14px; }
+  .ctrl-top  { display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+  .ctrl-label { font-size:13px; color:var(--txt-sec); }
   .ctrl-val {
-    font-size: 13px; font-weight: 600; color: var(--color-accent);
-    font-family: var(--font-mono); cursor: text;
-    border-bottom: 1.5px dashed var(--color-border-secondary);
-    padding: 0 3px; min-width: 24px; outline: none;
-    transition: border-color 0.15s;
+    font-size:13px; font-weight:700; color:var(--accent);
+    font-family:var(--mono); cursor:text;
+    border-bottom:1.5px dashed var(--border-sec);
+    padding:0 3px; min-width:26px; outline:none; transition:border-color .15s;
   }
-  .ctrl-val:focus { border-bottom: 1.5px solid var(--color-accent); }
-  .range-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--color-text-tertiary); margin-top: 1px; }
-  input[type="range"] { width: 100%; accent-color: #378ADD; height: 4px; }
+  .ctrl-val:focus { border-bottom:1.5px solid var(--accent); }
+  input[type="range"] { width:100%; accent-color:#378ADD; cursor:pointer; }
+  .range-labels { display:flex; justify-content:space-between; font-size:10px; color:var(--txt-dim); margin-top:1px; }
 
-  /* ── Buttons ── */
   .toggle-btn {
-    font-size: 11px; padding: 4px 10px;
-    border: 1px solid var(--color-border-secondary);
-    border-radius: 20px;
-    background: var(--color-bg-panel);
-    color: var(--color-text-muted);
-    cursor: pointer; white-space: nowrap;
-    font-weight: 500;
-    transition: all 0.15s;
+    font-size:11px; padding:4px 11px; border:1px solid var(--border-sec);
+    border-radius:20px; background:var(--bg-panel); color:var(--txt-muted);
+    cursor:pointer; white-space:nowrap; font-weight:500; transition:all .15s;
   }
-  .toggle-btn:hover { border-color: #378ADD; color: #378ADD; }
-  .toggle-btn.active { background: #EBF4FF; color: #1d4ed8; border-color: #378ADD; }
+  .toggle-btn:hover { border-color:#378ADD; color:#378ADD; }
+  .toggle-btn.active { background:#EBF4FF; color:#1d4ed8; border-color:#378ADD; }
   @media (prefers-color-scheme: dark) {
-    .toggle-btn.active { background: #1e3a5f; color: #93c5fd; border-color: #2563eb; }
-    .toggle-btn:hover { color: #93c5fd; border-color: #93c5fd; }
+    .toggle-btn.active { background:#1e3a5f; color:#93c5fd; border-color:#2563eb; }
+    .toggle-btn:hover  { color:#93c5fd; border-color:#93c5fd; }
   }
-  .reset-btn {
-    width: 100%; font-size: 12px; font-weight: 500; padding: 8px 10px;
-    border: 1px solid var(--color-border-secondary);
-    border-radius: var(--radius-md);
-    background: var(--color-bg-panel);
-    color: var(--color-text-secondary);
-    cursor: pointer; text-align: center; margin-top: 4px;
-    transition: all 0.15s;
+  .action-btn {
+    width:100%; font-size:12px; font-weight:500; padding:8px 10px;
+    border:1px solid var(--border-sec); border-radius:var(--r-md);
+    background:var(--bg-panel); color:var(--txt-sec);
+    cursor:pointer; text-align:center; margin-top:8px; transition:all .15s;
   }
-  .reset-btn:hover { background: var(--color-bg-secondary); border-color: #378ADD; color: #378ADD; }
+  .action-btn:hover { background:var(--bg-sec); border-color:#378ADD; color:#378ADD; }
 
-  /* ── Right panel container ── */
-  .right-panel {
-    background: var(--color-bg-panel);
-    border-radius: var(--radius-lg);
-    padding: 20px 22px;
-    border: 1px solid var(--color-border);
-    box-shadow: var(--shadow-md);
-    min-width: 0;
-  }
+  .right-panel { background:var(--bg-panel); border-radius:var(--r-lg); padding:20px 22px; border:1px solid var(--border); box-shadow:var(--shadow-md); min-width:0; }
 
-  /* ── Chart title ── */
-  .chart-title {
-    font-size: 19px;
-    font-weight: 700;
-    color: var(--color-text-primary);
-    text-align: center;
-    margin-bottom: 18px;
-    letter-spacing: -0.01em;
-  }
+  .stat-group-label { font-size:9px; font-weight:600; color:var(--txt-dim); letter-spacing:.07em; text-transform:uppercase; margin-bottom:2px; text-align:center; }
+  .row-label { font-size:9px; font-weight:600; color:var(--txt-dim); letter-spacing:.06em; text-transform:uppercase; margin-bottom:3px; margin-top:8px; }
+  .stat-grid { display:grid; gap:5px; margin-bottom:4px; }
+  .stat { background:var(--bg-sec); border-radius:6px; padding:5px 8px; min-width:0; border:1px solid var(--border); }
+  .stat-label { font-size:10px; color:var(--txt-dim); margin-bottom:1px; font-weight:500; }
+  .stat-num   { font-size:13px; font-weight:600; color:var(--txt-muted); font-family:var(--mono); }
+  .delta-title { font-size:9px; font-weight:600; color:var(--txt-dim); letter-spacing:.06em; text-transform:uppercase; margin-bottom:3px; margin-top:8px; }
 
-  /* ── Stats ── */
-  .stat-group-label {
-    font-size: 10px; font-weight: 700; color: var(--color-text-muted);
-    letter-spacing: .07em; text-transform: uppercase;
-    margin-bottom: 4px; text-align: center;
-  }
-  .row-label {
-    font-size: 10px; font-weight: 700; color: var(--color-text-muted);
-    letter-spacing: .06em; text-transform: uppercase;
-    margin-bottom: 5px; margin-top: 10px;
-  }
-  .stat-grid { display: grid; gap: 8px; margin-bottom: 6px; }
-  .stat {
-    background: var(--color-bg-stat);
-    border-radius: var(--radius-md);
-    padding: 10px 12px;
-    min-width: 0;
-    border: 1px solid var(--color-border);
-  }
-  .stat-label { font-size: 11px; color: var(--color-text-muted); margin-bottom: 4px; font-weight: 500; }
-  .stat-num { font-size: 15px; font-weight: 600; color: var(--color-text-primary); font-family: var(--font-mono); }
+  /* Stats sidebar */
+  .stats-sidebar { display:flex; flex-direction:column; gap:0; }
+  .sb-section-head { font-size:11px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; margin-bottom:5px; margin-top:4px; padding-bottom:4px; border-bottom:1px solid var(--border); }
+  .sb-group-label { font-size:9px; font-weight:700; color:var(--txt-muted); letter-spacing:.06em; text-transform:uppercase; margin:7px 0 3px; }
+  .sb-row { display:grid; grid-template-columns:1fr 1fr; gap:4px; margin-bottom:4px; }
+  .sb-stat { background:var(--bg-sec); border-radius:5px; padding:4px 6px; min-width:0; border:1px solid var(--border); }
+  .sb-label { font-size:9px; font-weight:600; color:var(--txt-sec); margin-bottom:1px; }
+  .sb-val   { font-size:12px; font-weight:700; color:var(--txt); font-family:var(--mono); }
+  .sb-note  { font-size:9px; color:var(--txt-muted); line-height:1.5; margin-bottom:6px; font-style:italic; }
 
-  .delta-title {
-    font-size: 10px; font-weight: 700; color: var(--color-text-muted);
-    letter-spacing: .06em; text-transform: uppercase;
-    margin-bottom: 5px; margin-top: 10px;
-  }
+  .legend { display:flex; gap:10px; flex-wrap:wrap; font-size:12px; color:var(--txt-sec); margin-top:12px; align-items:center; }
+  .leg-item { display:flex; align-items:center; gap:5px; white-space:nowrap; font-weight:500; }
 
-  /* ── Legend ── */
-  .legend {
-    display: flex; gap: 10px; flex-wrap: wrap;
-    font-size: 12px; color: var(--color-text-secondary);
-    margin-top: 12px; align-items: center;
-  }
-  .leg-item { display: flex; align-items: center; gap: 5px; white-space: nowrap; font-weight: 500; }
+  /* Equations */
+  .eq-panel { margin-top:16px; padding:16px 18px; background:var(--bg-sec); border-radius:var(--r-lg); border:1px solid var(--border); display:none; }
+  .eq-panel.open { display:block; }
+  .eq-section-head { font-size:11px; font-weight:700; color:var(--txt-muted); letter-spacing:.07em; text-transform:uppercase; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+  .eq-sub-head { font-size:12px; font-weight:700; color:var(--txt-sec); margin-bottom:8px; margin-top:16px; }
+  .eq-block { background:var(--bg-panel); border-radius:var(--r-md); padding:11px 14px; margin-bottom:8px; border:1px solid var(--border); }
+  .eq-label { font-size:10px; font-weight:700; color:var(--txt-muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:5px; }
+  .eq { font-family:var(--mono); font-size:13px; color:var(--txt); line-height:1.8; }
 
-  /* ── Signature ── */
-  .signature {
-    margin-top: 20px;
-    padding: 14px 16px;
-    background: var(--color-bg-secondary);
-    border-left: 4px solid #378ADD;
-    border-radius: 0 var(--radius-md) var(--radius-md) 0;
-    font-size: 12px;
-    color: var(--color-text-secondary);
-    line-height: 1.8;
+  /* Equations — typeset fraction style */
+  .eq-math {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 4px; font-size: 15px; color: var(--txt);
+    font-family: Georgia, 'Times New Roman', serif;
   }
-  .signature strong {
-    font-weight: 700;
-    color: var(--color-text-primary);
-    font-size: 13px;
-    display: block;
-    margin-bottom: 2px;
+  .eqv  { font-size: 15px; font-style: italic; }
+  .eqop { font-size: 15px; padding: 0 2px; color: var(--txt-muted); }
+  .frac {
+    display: inline-flex; flex-direction: column;
+    align-items: center; vertical-align: middle; gap: 1px;
   }
+  .fnum, .fden {
+    display: block; text-align: center;
+    font-size: 13px; line-height: 1.5;
+    padding: 0 6px;
+  }
+  .fnum { border-bottom: 1.5px solid var(--txt); padding-bottom: 3px; }
+  .fden { padding-top: 3px; }
 
-  /* ── Responsive ── */
-  @media (max-width: 760px) {
-    .layout { grid-template-columns: 1fr; }
-    .page-header h1 { font-size: 20px; }
+  /* References */
+  .ref-panel { margin-top:16px; padding:16px 18px; background:var(--bg-sec); border-radius:var(--r-lg); border:1px solid var(--border); }
+  .ref-head { font-size:11px; font-weight:700; color:var(--txt-muted); letter-spacing:.07em; text-transform:uppercase; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+  .ref-item { font-size:12px; color:var(--txt-sec); line-height:1.75; padding:8px 0; border-bottom:1px solid var(--border); }
+  .ref-item:last-child { border-bottom:none; padding-bottom:0; }
+  .ref-item em { color:var(--txt-muted); font-style:italic; }
+
+  /* Signature */
+  .signature { margin-top:20px; padding:14px 16px; background:var(--bg-sec); border-left:4px solid #378ADD; border-radius:0 var(--r-md) var(--r-md) 0; font-size:12px; color:var(--txt-sec); line-height:1.8; }
+  .signature strong { font-weight:700; color:var(--txt); font-size:13px; display:block; margin-bottom:2px; }
+
+  @media (max-width:1060px) {
+    .layout { grid-template-columns:1fr; }
+    .page-header h1 { font-size:20px; }
   }
 </style>
 </head>
@@ -234,29 +158,29 @@
 
 <div class="page-header">
   <h1>The Operational Model of Agonism</h1>
-  <p>Interactive pharmacological simulator based on the Black &amp; Leff operational model &middot; Adjust parameters using the sliders or click any value to type directly</p>
+  <p>Interactive pharmacological simulator based on the Black &amp; Leff operational model &middot; Adjust parameters with the sliders, or click any value to type directly</p>
 </div>
 
 <div class="layout">
 
-<!-- ══ LEFT PANEL ══ -->
+<!-- LEFT -->
 <div>
   <div class="panel">
     <div class="section-head">Agonism parameters</div>
     <div class="ctrl-row">
       <div class="ctrl-top">
         <span class="ctrl-label">Operational efficacy (<em>τ</em>)</span>
-        <span class="ctrl-val" id="tau-val" contenteditable="true" tabindex="0">10</span>
+        <span class="ctrl-val" id="tau-val" contenteditable="true" tabindex="0">50</span>
       </div>
-      <input type="range" min="-2" max="3" step="0.01" id="tau-s">
+      <input type="range" min="-2" max="3" step="0.005" id="tau-s">
       <div class="range-labels"><span>0.01</span><span>1000</span></div>
     </div>
     <div class="ctrl-row">
       <div class="ctrl-top">
         <span class="ctrl-label">Functional affinity (<em>K</em><sub>A</sub>, nM)</span>
-        <span class="ctrl-val" id="ka-val" contenteditable="true" tabindex="0">10</span>
+        <span class="ctrl-val" id="ka-val" contenteditable="true" tabindex="0">100</span>
       </div>
-      <input type="range" min="-3" max="5" step="0.01" id="ka-s">
+      <input type="range" min="-3" max="5" step="0.005" id="ka-s">
       <div class="range-labels"><span>100,000 nM (weak)</span><span>0.001 nM (strong)</span></div>
     </div>
   </div>
@@ -268,7 +192,7 @@
         <span class="ctrl-label">Receptor density (<em>R</em><sub>T</sub>)</span>
         <span class="ctrl-val" id="rt-val" contenteditable="true" tabindex="0">1</span>
       </div>
-      <input type="range" min="-3" max="3" step="0.01" id="rt-s">
+      <input type="range" min="-3" max="3" step="0.005" id="rt-s">
       <div class="range-labels"><span>0.001×</span><span>1000×</span></div>
     </div>
     <div class="ctrl-row">
@@ -291,107 +215,292 @@
 
   <div class="panel">
     <div class="section-head">Compare agonist</div>
-    <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--color-text-secondary);margin-bottom:10px;">
+    <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--txt-sec);margin-bottom:10px;">
       <input type="checkbox" id="show-ref" checked> Show reference agonist
     </label>
     <div id="ref-ctrls">
       <div class="ctrl-row">
         <div class="ctrl-top">
           <span class="ctrl-label">Operational efficacy (<em>τ</em>)</span>
-          <span class="ctrl-val" id="tau2-val" contenteditable="true" tabindex="0">100</span>
+          <span class="ctrl-val" id="tau2-val" contenteditable="true" tabindex="0">500</span>
         </div>
-        <input type="range" min="-2" max="3" step="0.01" id="tau2-s">
+        <input type="range" min="-2" max="3" step="0.005" id="tau2-s">
         <div class="range-labels"><span>0.01</span><span>1000</span></div>
       </div>
       <div class="ctrl-row">
         <div class="ctrl-top">
           <span class="ctrl-label">Functional affinity (<em>K</em><sub>A</sub>, nM)</span>
-          <span class="ctrl-val" id="ka2-val" contenteditable="true" tabindex="0">100</span>
+          <span class="ctrl-val" id="ka2-val" contenteditable="true" tabindex="0">1000</span>
         </div>
-        <input type="range" min="-3" max="5" step="0.01" id="ka2-s">
-        <div class="range-labels"><span>100,000 nM</span><span>0.001 nM</span></div>
+        <input type="range" min="-3" max="5" step="0.005" id="ka2-s">
+        <div class="range-labels"><span>100,000 nM (weak)</span><span>0.001 nM (strong)</span></div>
       </div>
     </div>
   </div>
 
-  <button class="reset-btn" id="reset-btn">↺ Reset to default parameters</button>
+  <button class="action-btn" id="reset-btn">↺ Reset to default parameters</button>
+  <button class="action-btn" id="eq-toggle-btn">Show equations</button>
 </div>
 
-<!-- ══ RIGHT PANEL ══ -->
+<!-- RIGHT -->
 <div class="right-panel">
 
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:2px;">
-    <div class="stat-group-label">Potency</div>
-    <div class="stat-group-label">Maximal response</div>
-    <div class="stat-group-label">Activity</div>
-  </div>
+  <!-- Inner two-column layout: chart area | stats sidebar -->
+  <div style="display:grid;grid-template-columns:1fr 210px;gap:16px;align-items:start;">
 
-  <div class="row-label">Primary agonist</div>
-  <div class="stat-grid" style="grid-template-columns:1fr 1fr 1fr;">
-    <div class="stat" style="border-left:3px solid #378ADD;"><div class="stat-label"><em>EC</em><sub>50</sub></div><div class="stat-num" id="ec50-out">—</div></div>
-    <div class="stat" style="border-left:3px solid #378ADD;"><div class="stat-label"><em>E</em><sub>max</sub></div><div class="stat-num" id="emax-out">—</div></div>
-    <div class="stat" style="border-left:3px solid #378ADD;"><div class="stat-label">Log(<em>τ</em>/<em>K</em><sub>A</sub>)</div><div class="stat-num" id="ltka1-out">—</div></div>
-  </div>
-
-  <div id="ref-stats-row">
-    <div class="row-label">Reference agonist</div>
-    <div class="stat-grid" style="grid-template-columns:1fr 1fr 1fr;">
-      <div class="stat" style="border-left:3px solid #D85A30;"><div class="stat-label"><em>EC</em><sub>50</sub></div><div class="stat-num" id="ec50-ref-out">—</div></div>
-      <div class="stat" style="border-left:3px solid #D85A30;"><div class="stat-label"><em>E</em><sub>max</sub></div><div class="stat-num" id="emax-ref-out">—</div></div>
-      <div class="stat" style="border-left:3px solid #D85A30;"><div class="stat-label">Log(<em>τ</em>/<em>K</em><sub>A</sub>)</div><div class="stat-num" id="ltka2-out">—</div></div>
-    </div>
-  </div>
-
-  <div id="delta-section">
-    <div class="delta-title">Relative activity (Primary versus reference agonist)</div>
-    <div class="stat-grid" style="grid-template-columns:1fr 2fr;">
-      <div class="stat" style="border-left:3px solid #C9A84C;"><div class="stat-label">ΔLog(<em>τ</em>/<em>K</em><sub>A</sub>)</div><div class="stat-num" id="dltka-out">—</div></div>
-      <div style="display:flex;align-items:center;padding:0 4px;">
-        <span style="font-size:11px;color:var(--color-text-tertiary);line-height:1.5;">Positive: primary has greater activity than reference. Negative: reference has greater activity.</span>
+    <!-- CHART COLUMN -->
+    <div>
+      <div style="position:relative;width:100%;height:440px;">
+        <canvas id="chart"></canvas>
+      </div>
+      <div class="legend">
+        <span class="leg-item">
+          <svg width="22" height="10" style="flex-shrink:0"><line x1="0" y1="5" x2="22" y2="5" stroke="#378ADD" stroke-width="2.5"/></svg>
+          Primary agonist response
+        </span>
+        <span class="leg-item" id="ref-leg">
+          <svg width="22" height="10" style="flex-shrink:0"><line x1="0" y1="5" x2="22" y2="5" stroke="#D85A30" stroke-width="2"/></svg>
+          Reference agonist response
+        </span>
+        <span class="leg-item" id="occ-leg">
+          <svg width="22" height="10" style="flex-shrink:0"><line x1="0" y1="5" x2="22" y2="5" stroke="#1D9E75" stroke-width="1.5" stroke-dasharray="5,4"/></svg>
+          Primary agonist receptor occupancy
+        </span>
+        <button class="toggle-btn active" id="occ-toggle">Hide receptor occupancy for primary agonist</button>
+        <button class="toggle-btn active" id="marker-toggle">Hide markers for potency and functional affinity</button>
       </div>
     </div>
+
+    <!-- STATS SIDEBAR -->
+    <div class="stats-sidebar">
+
+      <!-- Primary -->
+      <div class="sb-section-head" style="color:#378ADD;">Primary agonist</div>
+      <div class="sb-row">
+        <div class="sb-stat" style="border-left:2px solid #378ADD;">
+          <div class="sb-label"><em>EC</em><sub>50</sub></div>
+          <div class="sb-val" id="ec50-out">—</div>
+        </div>
+        <div class="sb-stat" style="border-left:2px solid #378ADD;">
+          <div class="sb-label"><em>E</em><sub>max</sub></div>
+          <div class="sb-val" id="emax-out">—</div>
+        </div>
+      </div>
+      <div class="sb-stat" style="border-left:2px solid #378ADD;margin-bottom:10px;">
+        <div class="sb-label">Log(<em>τ</em>/<em>K</em><sub>A</sub>)</div>
+        <div class="sb-val" id="ltka1-out">—</div>
+      </div>
+
+      <!-- Reference -->
+      <div id="ref-stats-row">
+        <div class="sb-section-head" style="color:#D85A30;">Reference agonist</div>
+        <div class="sb-row">
+          <div class="sb-stat" style="border-left:2px solid #D85A30;">
+            <div class="sb-label"><em>EC</em><sub>50</sub></div>
+            <div class="sb-val" id="ec50-ref-out">—</div>
+          </div>
+          <div class="sb-stat" style="border-left:2px solid #D85A30;">
+            <div class="sb-label"><em>E</em><sub>max</sub></div>
+            <div class="sb-val" id="emax-ref-out">—</div>
+          </div>
+        </div>
+        <div class="sb-stat" style="border-left:2px solid #D85A30;margin-bottom:10px;">
+          <div class="sb-label">Log(<em>τ</em>/<em>K</em><sub>A</sub>)</div>
+          <div class="sb-val" id="ltka2-out">—</div>
+        </div>
+      </div>
+
+      <!-- Comparison -->
+      <div id="delta-section">
+        <div class="sb-section-head" style="color:#b58b00;">Agonist comparison</div>
+        <div class="sb-note">Relative = primary / reference &middot; Positive Δ = primary has greater value</div>
+
+        <div class="sb-group-label">Relative potency &amp; response</div>
+        <div class="sb-row">
+          <div class="sb-stat" style="border-left:2px solid #C9A84C;">
+            <div class="sb-label">Rel. <em>EC</em><sub>50</sub></div>
+            <div class="sb-val" id="rel-ec50-out">—</div>
+          </div>
+          <div class="sb-stat" style="border-left:2px solid #C9A84C;">
+            <div class="sb-label">Rel. <em>E</em><sub>max</sub></div>
+            <div class="sb-val" id="rel-emax-out">—</div>
+          </div>
+        </div>
+
+        <div class="sb-group-label">Relative functional affinity</div>
+        <div class="sb-row">
+          <div class="sb-stat" style="border-left:2px solid #C9A84C;">
+            <div class="sb-label">ΔLog(1/<em>K</em><sub>A</sub>)</div>
+            <div class="sb-val" id="dlog-ka-out">—</div>
+          </div>
+          <div class="sb-stat" style="border-left:2px solid #C9A84C;">
+            <div class="sb-label">Rel. <em>K</em><sub>A</sub></div>
+            <div class="sb-val" id="rel-ka-out">—</div>
+          </div>
+        </div>
+
+        <div class="sb-group-label">Relative intrinsic efficacy</div>
+        <div class="sb-row">
+          <div class="sb-stat" style="border-left:2px solid #C9A84C;">
+            <div class="sb-label">ΔLog(<em>τ</em>)</div>
+            <div class="sb-val" id="dlog-tau-out">—</div>
+          </div>
+          <div class="sb-stat" style="border-left:2px solid #C9A84C;">
+            <div class="sb-label">Rel. <em>τ</em></div>
+            <div class="sb-val" id="rel-tau-out">—</div>
+          </div>
+        </div>
+
+        <div class="sb-group-label">Relative activity</div>
+        <div class="sb-row">
+          <div class="sb-stat" style="border-left:2px solid #C9A84C;">
+            <div class="sb-label">ΔLog(<em>τ</em>/<em>K</em><sub>A</sub>)</div>
+            <div class="sb-val" id="dltka-out">—</div>
+          </div>
+          <div class="sb-stat" style="border-left:2px solid #C9A84C;">
+            <div class="sb-label">Rel. <em>τ</em>/<em>K</em><sub>A</sub></div>
+            <div class="sb-val" id="rel-tka-out">—</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end stats sidebar -->
+  </div><!-- end inner grid -->
+
+  <!-- EQUATIONS -->
+  <div class="eq-panel" id="eq-panel">
+    <div class="eq-section-head">Operational model equations</div>
+
+    <div class="eq-sub-head">General form (Hill slope <em>n</em>)</div>
+
+    <!-- E general -->
+    <div class="eq-block">
+      <div class="eq-label">Response (<em>E</em>)</div>
+      <div class="eq-math">
+        <span class="eqv"><em>E</em></span>
+        <span class="eqop">=</span>
+        <span class="frac">
+          <span class="fnum">[A]<sup><em>n</em></sup> &thinsp;&middot;&thinsp; &tau;<sup><em>n</em></sup> &thinsp;&middot;&thinsp; <em>E</em><sub>m</sub></span>
+          <span class="fden">[A]<sup><em>n</em></sup> &thinsp;&middot;&thinsp; &tau;<sup><em>n</em></sup> &thinsp;+&thinsp; ([A] + <em>K</em><sub>A</sub>)<sup><em>n</em></sup></span>
+        </span>
+      </div>
+    </div>
+
+    <!-- EC50 general -->
+    <div class="eq-block">
+      <div class="eq-label">Potency (<em>EC</em><sub>50</sub>)</div>
+      <div class="eq-math">
+        <span class="eqv"><em>EC</em><sub>50</sub></span>
+        <span class="eqop">=</span>
+        <span class="frac">
+          <span class="fnum"><em>K</em><sub>A</sub></span>
+          <span class="fden">(2 + &tau;<sup><em>n</em></sup>)<sup>1/<em>n</em></sup> &minus; 1</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Emax general -->
+    <div class="eq-block">
+      <div class="eq-label">Maximal response (<em>E</em><sub>max</sub>)</div>
+      <div class="eq-math">
+        <span class="eqv"><em>E</em><sub>max</sub></span>
+        <span class="eqop">=</span>
+        <span class="frac">
+          <span class="fnum">&tau;<sup><em>n</em></sup> &thinsp;&middot;&thinsp; <em>E</em><sub>m</sub></span>
+          <span class="fden">&tau;<sup><em>n</em></sup> + 1</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="eq-sub-head">Simplified form (when <em>n</em> = 1)</div>
+
+    <!-- E simplified -->
+    <div class="eq-block">
+      <div class="eq-label">Response (<em>E</em>)</div>
+      <div class="eq-math">
+        <span class="eqv"><em>E</em></span>
+        <span class="eqop">=</span>
+        <span class="frac">
+          <span class="fnum">[A] &thinsp;&middot;&thinsp; &tau; &thinsp;&middot;&thinsp; <em>E</em><sub>m</sub></span>
+          <span class="fden">[A]&thinsp;(&tau; + 1) + <em>K</em><sub>A</sub></span>
+        </span>
+      </div>
+    </div>
+
+    <!-- EC50 simplified -->
+    <div class="eq-block">
+      <div class="eq-label">Potency (<em>EC</em><sub>50</sub>)</div>
+      <div class="eq-math">
+        <span class="eqv"><em>EC</em><sub>50</sub></span>
+        <span class="eqop">=</span>
+        <span class="frac">
+          <span class="fnum"><em>K</em><sub>A</sub></span>
+          <span class="fden">&tau; + 1</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Emax simplified -->
+    <div class="eq-block">
+      <div class="eq-label">Maximal response (<em>E</em><sub>max</sub>)</div>
+      <div class="eq-math">
+        <span class="eqv"><em>E</em><sub>max</sub></span>
+        <span class="eqop">=</span>
+        <span class="frac">
+          <span class="fnum">&tau; &thinsp;&middot;&thinsp; <em>E</em><sub>m</sub></span>
+          <span class="fden">&tau; + 1</span>
+        </span>
+      </div>
+    </div>
+
+    <div style="margin-top:12px;padding:10px 12px;background:var(--bg-panel);border-radius:var(--r-md);border:1px solid var(--border);font-size:11px;color:var(--txt-muted);line-height:1.9;">
+      <strong style="color:var(--txt-sec);display:block;margin-bottom:4px;">Parameter definitions</strong>
+      [A] = agonist concentration &nbsp;&middot;&nbsp;
+      &tau; = operational efficacy (incorporates receptor density) &nbsp;&middot;&nbsp;
+      <em>K</em><sub>A</sub> = functional affinity &nbsp;&middot;&nbsp;
+      <em>E</em><sub>m</sub> = maximum possible system response &nbsp;&middot;&nbsp;
+      <em>n</em> = transducer (Hill) slope
+    </div>
   </div>
 
-  <div style="position:relative;width:100%;height:280px;margin-top:8px;">
-    <canvas id="chart"></canvas>
-  </div>
-
-  <div class="legend">
-    <span class="leg-item">
-      <svg width="22" height="10" style="flex-shrink:0"><line x1="0" y1="5" x2="22" y2="5" stroke="#378ADD" stroke-width="2.5"/></svg>
-      Primary agonist response
-    </span>
-    <span class="leg-item" id="ref-leg">
-      <svg width="22" height="10" style="flex-shrink:0"><line x1="0" y1="5" x2="22" y2="5" stroke="#D85A30" stroke-width="2"/></svg>
-      Reference agonist response
-    </span>
-    <span class="leg-item" id="occ-leg">
-      <svg width="22" height="10" style="flex-shrink:0"><line x1="0" y1="5" x2="22" y2="5" stroke="#1D9E75" stroke-width="1.5" stroke-dasharray="5,4"/></svg>
-      Primary agonist receptor occupancy
-    </span>
-    <button class="toggle-btn active" id="occ-toggle">Hide receptor occupancy for primary agonist</button>
-    <button class="toggle-btn active" id="marker-toggle">Hide markers for potency and functional affinity</button>
-  </div>
-
+  <!-- SIGNATURE -->
   <div class="signature">
     <strong>By Dr Kiyan Afzali</strong>
     Scientific Director, Consultant, Researcher, and Inventor<br>
     PhD (Medicine | Pharmacology &amp; Drug Discovery) &middot; The University of Sydney<br><br>
     &copy; 2026 Dr Kiyan Afzali. All rights reserved.<br><br>
-    <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;margin-bottom:6px;">
+    <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank"
+       style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;margin-bottom:6px;">
       <img alt="Creative Commons Licence" style="height:22px;border:none;"
-        src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
-      <span style="font-size:12px;font-weight:600;color:var(--color-text-secondary);">CC BY-NC-ND 4.0</span>
+           src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+      <span style="font-size:12px;font-weight:600;color:var(--txt-sec);">CC BY-NC-ND 4.0</span>
     </a><br>
-    <span style="font-size:12px;color:var(--color-text-muted);line-height:1.6;">
+    <span style="font-size:12px;color:var(--txt-muted);line-height:1.6;">
       Licensed under
       <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank"
-        style="color:var(--color-accent);text-decoration:underline;">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0</a>.
+         style="color:var(--accent);text-decoration:underline;">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0</a>.
       You may share this tool with attribution, but may not use it commercially or create derivative works.
     </span>
   </div>
-</div>
 
+  <!-- REFERENCES (below signature) -->
+  <div class="ref-panel">
+    <div class="ref-head">References</div>
+    <div class="ref-item">
+      Black JW, Leff P. Operational models of pharmacological agonism.
+      <em>Proc R Soc Lond B Biol Sci.</em> 1983;220(1219):141&ndash;162.
+    </div>
+    <div class="ref-item">
+      Black JW, Leff P, Shankley NP, Wood J. An operational model of pharmacological agonism: the effect of E/[A] curve shape on agonist dissociation constant estimation. 1985.
+      <em>Br J Pharmacol.</em> 2010;160 Suppl 1(Suppl 1):S54&ndash;64.
+    </div>
+    <div class="ref-item">
+      Afzali K, Connor M. Employing the Operational Model to Measure System-Independent OTR Efficacy.
+      <em>Methods in Molecular Biology (Clifton, NJ).</em> 2022;2384:201&ndash;220.
+    </div>
+  </div>
+
+</div><!-- end right-panel -->
 </div><!-- end layout -->
 </div><!-- end outer -->
 
@@ -400,10 +509,12 @@
 const EM=100, X_MIN=-12, X_MAX=-3;
 let showOcc=true, showMarkers=true;
 
-const state={tau:10,ka:10,rt:1,e0:0,n:1,tau2:100,ka2:100};
-const DEFAULTS={tau:10,ka:10,rt:1,e0:0,n:1,tau2:100,ka2:100};
+const state={tau:50,ka:100,rt:1,e0:0,n:1,tau2:500,ka2:1000};
+const DEFAULTS={tau:50,ka:100,rt:1,e0:0,n:1,tau2:500,ka2:1000};
 
 function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+
+// Snap raw log-scale value to nearest clean number for display
 function fmtV(v){
   if(v>=100)  return Math.round(v).toString();
   if(v>=10)   return parseFloat(v.toFixed(1)).toString();
@@ -412,12 +523,32 @@ function fmtV(v){
   return parseFloat(v.toFixed(4)).toString();
 }
 
+// Magnetic snap: if within snapFrac of a "round" number, lock to it.
+// Rounds are: integers, and decade-multiples (10,20,...100,200,...)
+function magnetSnap(v){
+  if(v <= 0) return v;
+  const snapFrac = 0.03; // 3% tolerance band around each whole number
+
+  // Build candidate round numbers near v
+  const mag = Math.pow(10, Math.floor(Math.log10(v)));
+  const candidates = [];
+  // integer multiples of mag/10 (covers 0.1, 0.2 ... 1, 2 ... 10, 20 etc.)
+  for(let m = 1; m <= 20; m++) candidates.push(m * mag / 10);
+  // also decade above
+  for(let m = 1; m <= 10; m++) candidates.push(m * mag);
+
+  for(const c of candidates){
+    if(c > 0 && Math.abs(v - c) / c < snapFrac) return c;
+  }
+  return v;
+}
+
 const C={
   tau:  {s2v:s=>Math.pow(10,+s),          v2s:v=>Math.log10(clamp(v,0.01,1000)),   min:0.01,  max:1000  },
   ka:   {s2v:s=>Math.pow(10,2-(+s)),      v2s:v=>2-Math.log10(clamp(v,0.001,1e5)), min:0.001, max:100000},
   rt:   {s2v:s=>Math.pow(10,+s),          v2s:v=>Math.log10(clamp(v,0.001,1000)),  min:0.001, max:1000  },
   e0:   {s2v:s=>+s,                       v2s:v=>v,                                 min:0,     max:30    },
-  n:    {s2v:s=>parseFloat((+s).toFixed(1)),v2s:v=>v,                               min:0.3,   max:3     },
+  n:    {s2v:s=>+parseFloat((+s).toFixed(1)),v2s:v=>v,                              min:0.3,   max:3     },
   tau2: {s2v:s=>Math.pow(10,+s),          v2s:v=>Math.log10(clamp(v,0.01,1000)),   min:0.01,  max:1000  },
   ka2:  {s2v:s=>Math.pow(10,2-(+s)),      v2s:v=>2-Math.log10(clamp(v,0.001,1e5)), min:0.001, max:100000},
 };
@@ -493,8 +624,8 @@ let ch=null;
 
 function update(){
   const{tau,ka,rt,e0,n,tau2,ka2}=state;
-  const KA_M=ka*1e-9, KA2_M=ka2*1e-9;
-  const tauEff=tau*rt, tau2Eff=tau2*rt;
+  const KA_M=ka*1e-9,KA2_M=ka2*1e-9;
+  const tauEff=tau*rt,tau2Eff=tau2*rt;
   const showRef=document.getElementById('show-ref').checked;
 
   document.getElementById('ref-ctrls').style.display    =showRef?'block':'none';
@@ -523,7 +654,37 @@ function update(){
   document.getElementById('ec50-ref-out').textContent=showRef?fmtNM(ec50M2*1e9):'—';
   document.getElementById('emax-ref-out').textContent=showRef?fmt(emax2,1)+'%':'—';
   document.getElementById('ltka2-out').textContent   =showRef?fmt(ltka2,2):'—';
-  document.getElementById('dltka-out').textContent   =showRef?fmt(ltka1-ltka2,2):'—';
+
+  if(showRef){
+    // Relative EC50 (primary / reference)
+    const relEC50 = ec50M / ec50M2;
+    document.getElementById('rel-ec50-out').textContent = fmt(relEC50,3);
+    // Relative Emax (primary / reference)
+    const relEmax = emax / emax2;
+    document.getElementById('rel-emax-out').textContent = fmt(relEmax,3);
+    // Delta Log(1/KA) = Log(KA_ref / KA_primary)
+    const dlogKA = Math.log10(KA2_M / KA_M);
+    document.getElementById('dlog-ka-out').textContent = fmt(dlogKA,2);
+    // Relative KA = KA_primary / KA_reference
+    const relKA = KA_M / KA2_M;
+    document.getElementById('rel-ka-out').textContent = fmt(relKA,3);
+    // Delta Log(tau) = Log(tauEff / tau2Eff)
+    const dlogTau = Math.log10(tauEff / tau2Eff);
+    document.getElementById('dlog-tau-out').textContent = fmt(dlogTau,2);
+    // Relative tau = tauEff / tau2Eff
+    const relTau = tauEff / tau2Eff;
+    document.getElementById('rel-tau-out').textContent = fmt(relTau,3);
+    // Delta Log(tau/KA)
+    const dltka = ltka1 - ltka2;
+    document.getElementById('dltka-out').textContent = fmt(dltka,2);
+    // Relative tau/KA = (tau/KA primary) / (tau/KA reference)
+    const relTKA = (tauEff / KA_M) / (tau2Eff / KA2_M);
+    document.getElementById('rel-tka-out').textContent = fmt(relTKA,3);
+  } else {
+    ['rel-ec50-out','rel-emax-out','dlog-ka-out','rel-ka-out','dlog-tau-out','rel-tau-out','dltka-out','rel-tka-out'].forEach(id=>{
+      document.getElementById(id).textContent='—';
+    });
+  }
 
   const markers=[{xM:ec50M,color:'rgba(55,138,221,0.9)',label:'EC50',labelOffset:6}];
   if(showOcc) markers.push({xM:KA_M,color:'rgba(29,158,117,0.85)',label:'KA',labelOffset:20});
@@ -549,12 +710,9 @@ function update(){
         plugins:{legend:{display:false},markerLines:{markers,visible:showMarkers},
           tooltip:{callbacks:{title:i=>'10^'+i[0].label+' M',label:c=>' '+c.dataset.label+': '+fmt(c.raw,1)+'%'}}},
         scales:{
-          x:{
-            ticks:{color:'#888',font:{size:12},autoSkip:false,
+          x:{ticks:{color:'#888',font:{size:12},autoSkip:false,
               callback:(v,i)=>{const lm=pts[i];return lm!=null&&Math.abs(lm-Math.round(lm))<0.05?Math.round(lm).toString():''}},
-            grid:{display:false},
-            title:{display:true,text:'Log[Agonist (M)]',color:'#666',font:{size:13}}
-          },
+            grid:{display:false},title:{display:true,text:'Log[Agonist (M)]',color:'#666',font:{size:13}}},
           yLeft:{type:'linear',position:'left',min:0,max:100,
             ticks:{color:'#378ADD',font:{size:12},stepSize:10,callback:v=>v+'%'},
             grid:{color:'rgba(128,128,128,0.1)'},
@@ -571,9 +729,12 @@ function update(){
 
 KEYS.forEach(k=>{
   document.getElementById(k+'-s').addEventListener('input',function(){
-    state[k]=C[k].s2v(+this.value);
+    const raw = C[k].s2v(+this.value);
+    // Apply magnetic snap for log-scale sliders (not e0 or n which are linear/small-range)
+    const snapped = (k==='e0'||k==='n') ? raw : magnetSnap(raw);
+    state[k] = snapped;
     const el=document.getElementById(k+'-val');
-    if(document.activeElement!==el) el.textContent=fmtV(state[k]);
+    if(document.activeElement!==el) el.textContent=fmtV(snapped);
     update();
   });
   const el=document.getElementById(k+'-val');
@@ -608,6 +769,11 @@ document.getElementById('reset-btn').addEventListener('click',function(){
   Object.assign(state,DEFAULTS);
   document.getElementById('show-ref').checked=true;
   syncDom(); update();
+});
+document.getElementById('eq-toggle-btn').addEventListener('click',function(){
+  const panel=document.getElementById('eq-panel');
+  const open=panel.classList.toggle('open');
+  this.textContent=open?'Hide equations':'Show equations';
 });
 
 syncDom();

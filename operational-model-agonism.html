@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<!-- © 2026 Dr Kiyan Afzali. All rights reserved. -->
+<!-- Licensed under CC BY-NC-ND 4.0: https://creativecommons.org/licenses/by-nc-nd/4.0/ -->
+<!-- Unauthorised reproduction, modification, or commercial use is prohibited. -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Operational Model of Agonism — Interactive Chart</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --color-bg:               #f8f9fb;
+    --color-bg-panel:         #ffffff;
+    --color-bg-secondary:     #f0f2f5;
+    --color-bg-stat:          #f4f6f9;
+    --color-text-primary:     #111827;
+    --color-text-secondary:   #374151;
+    --color-text-muted:       #6b7280;
+    --color-text-tertiary:    #9ca3af;
+    --color-border:           rgba(0,0,0,0.10);
+    --color-border-secondary: rgba(0,0,0,0.20);
+    --color-accent:           #1e3a5f;
+    --radius-md:              8px;
+    --radius-lg:              14px;
+    --font-mono:              'Courier New', monospace;
+    --shadow-sm:              0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.05);
+    --shadow-md:              0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-bg:               #111827;
+      --color-bg-panel:         #1f2937;
+      --color-bg-secondary:     #1f2937;
+      --color-bg-stat:          #283548;
+      --color-text-primary:     #f9fafb;
+      --color-text-secondary:   #e5e7eb;
+      --color-text-muted:       #9ca3af;
+      --color-text-tertiary:    #6b7280;
+      --color-border:           rgba(255,255,255,0.08);
+      --color-border-secondary: rgba(255,255,255,0.18);
+      --color-accent:           #93c5fd;
+      --shadow-sm:              0 1px 3px rgba(0,0,0,0.3);
+      --shadow-md:              0 4px 12px rgba(0,0,0,0.4);
+    }
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: var(--color-bg);
+    color: var(--color-text-primary);
+    padding: 28px 24px 48px;
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+
+  .outer { max-width: 1140px; margin: 0 auto; }
+
+  /* ── Page header ── */
+  .page-header {
+    text-align: center;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .page-header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+  }
+  .page-header p {
+    font-size: 14px;
+    color: var(--color-text-muted);
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 285px 1fr;
+    gap: 22px;
+    align-items: start;
+  }
+
+  /* ── Panels ── */
+  .panel {
+    background: var(--color-bg-panel);
+    border-radius: var(--radius-lg);
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
+  }
+  .section-head {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--color-text-muted);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  /* ── Controls ── */
+  .ctrl-row { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+  .ctrl-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  .ctrl-label { font-size: 13px; color: var(--color-text-secondary); font-weight: 400; }
+  .ctrl-val {
+    font-size: 13px; font-weight: 600; color: var(--color-accent);
+    font-family: var(--font-mono); cursor: text;
+    border-bottom: 1.5px dashed var(--color-border-secondary);
+    padding: 0 3px; min-width: 24px; outline: none;
+    transition: border-color 0.15s;
+  }
+  .ctrl-val:focus { border-bottom: 1.5px solid var(--color-accent); }
+  .range-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--color-text-tertiary); margin-top: 1px; }
+  input[type="range"] { width: 100%; accent-color: #378ADD; height: 4px; }
+
+  /* ── Buttons ── */
+  .toggle-btn {
+    font-size: 11px; padding: 4px 10px;
+    border: 1px solid var(--color-border-secondary);
+    border-radius: 20px;
+    background: var(--color-bg-panel);
+    color: var(--color-text-muted);
+    cursor: pointer; white-space: nowrap;
+    font-weight: 500;
+    transition: all 0.15s;
+  }
+  .toggle-btn:hover { border-color: #378ADD; color: #378ADD; }
+  .toggle-btn.active { background: #EBF4FF; color: #1d4ed8; border-color: #378ADD; }
+  @media (prefers-color-scheme: dark) {
+    .toggle-btn.active { background: #1e3a5f; color: #93c5fd; border-color: #2563eb; }
+    .toggle-btn:hover { color: #93c5fd; border-color: #93c5fd; }
+  }
+  .reset-btn {
+    width: 100%; font-size: 12px; font-weight: 500; padding: 8px 10px;
+    border: 1px solid var(--color-border-secondary);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-panel);
+    color: var(--color-text-secondary);
+    cursor: pointer; text-align: center; margin-top: 4px;
+    transition: all 0.15s;
+  }
+  .reset-btn:hover { background: var(--color-bg-secondary); border-color: #378ADD; color: #378ADD; }
+
+  /* ── Right panel container ── */
+  .right-panel {
+    background: var(--color-bg-panel);
+    border-radius: var(--radius-lg);
+    padding: 20px 22px;
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-md);
+    min-width: 0;
+  }
+
+  /* ── Chart title ── */
+  .chart-title {
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    text-align: center;
+    margin-bottom: 18px;
+    letter-spacing: -0.01em;
+  }
+
+  /* ── Stats ── */
+  .stat-group-label {
+    font-size: 10px; font-weight: 700; color: var(--color-text-muted);
+    letter-spacing: .07em; text-transform: uppercase;
+    margin-bottom: 4px; text-align: center;
+  }
+  .row-label {
+    font-size: 10px; font-weight: 700; color: var(--color-text-muted);
+    letter-spacing: .06em; text-transform: uppercase;
+    margin-bottom: 5px; margin-top: 10px;
+  }
+  .stat-grid { display: grid; gap: 8px; margin-bottom: 6px; }
+  .stat {
+    background: var(--color-bg-stat);
+    border-radius: var(--radius-md);
+    padding: 10px 12px;
+    min-width: 0;
+    border: 1px solid var(--color-border);
+  }
+  .stat-label { font-size: 11px; color: var(--color-text-muted); margin-bottom: 4px; font-weight: 500; }
+  .stat-num { font-size: 15px; font-weight: 600; color: var(--color-text-primary); font-family: var(--font-mono); }
+
+  .delta-title {
+    font-size: 10px; font-weight: 700; color: var(--color-text-muted);
+    letter-spacing: .06em; text-transform: uppercase;
+    margin-bottom: 5px; margin-top: 10px;
+  }
+
+  /* ── Legend ── */
+  .legend {
+    display: flex; gap: 10px; flex-wrap: wrap;
+    font-size: 12px; color: var(--color-text-secondary);
+    margin-top: 12px; align-items: center;
+  }
+  .leg-item { display: flex; align-items: center; gap: 5px; white-space: nowrap; font-weight: 500; }
+
+  /* ── Signature ── */
+  .signature {
+    margin-top: 20px;
+    padding: 14px 16px;
+    background: var(--color-bg-secondary);
+    border-left: 4px solid #378ADD;
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    line-height: 1.8;
+  }
+  .signature strong {
+    font-weight: 700;
+    color: var(--color-text-primary);
+    font-size: 13px;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 760px) {
+    .layout { grid-template-columns: 1fr; }
+    .page-header h1 { font-size: 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="outer">
+
+<div class="page-header">
+  <h1>The Operational Model of Agonism</h1>
+  <p>Interactive pharmacological simulator based on the Black &amp; Leff operational model &middot; Adjust parameters using the sliders or click any value to type directly</p>
+</div>
+
+<div class="layout">
+
+<!-- ══ LEFT PANEL ══ -->
+<div>
+  <div class="panel">
+    <div class="section-head">Agonism parameters</div>
+    <div class="ctrl-row">
+      <div class="ctrl-top">
+        <span class="ctrl-label">Operational efficacy (<em>τ</em>)</span>
+        <span class="ctrl-val" id="tau-val" contenteditable="true" tabindex="0">10</span>
+      </div>
+      <input type="range" min="-2" max="3" step="0.01" id="tau-s">
+      <div class="range-labels"><span>0.01</span><span>1000</span></div>
+    </div>
+    <div class="ctrl-row">
+      <div class="ctrl-top">
+        <span class="ctrl-label">Functional affinity (<em>K</em><sub>A</sub>, nM)</span>
+        <span class="ctrl-val" id="ka-val" contenteditable="true" tabindex="0">10</span>
+      </div>
+      <input type="range" min="-3" max="5" step="0.01" id="ka-s">
+      <div class="range-labels"><span>100,000 nM (weak)</span><span>0.001 nM (strong)</span></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="section-head">System parameters</div>
+    <div class="ctrl-row">
+      <div class="ctrl-top">
+        <span class="ctrl-label">Receptor density (<em>R</em><sub>T</sub>)</span>
+        <span class="ctrl-val" id="rt-val" contenteditable="true" tabindex="0">1</span>
+      </div>
+      <input type="range" min="-3" max="3" step="0.01" id="rt-s">
+      <div class="range-labels"><span>0.001×</span><span>1000×</span></div>
+    </div>
+    <div class="ctrl-row">
+      <div class="ctrl-top">
+        <span class="ctrl-label">Basal response (<em>E</em><sub>0</sub>)</span>
+        <span class="ctrl-val" id="e0-val" contenteditable="true" tabindex="0">0</span>
+      </div>
+      <input type="range" min="0" max="30" step="1" id="e0-s">
+      <div class="range-labels"><span>0%</span><span>30%</span></div>
+    </div>
+    <div class="ctrl-row">
+      <div class="ctrl-top">
+        <span class="ctrl-label">Transducer slope (<em>n</em>)</span>
+        <span class="ctrl-val" id="n-val" contenteditable="true" tabindex="0">1</span>
+      </div>
+      <input type="range" min="0.3" max="3" step="0.1" id="n-s">
+      <div class="range-labels"><span>0.3</span><span>3</span></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="section-head">Compare agonist</div>
+    <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--color-text-secondary);margin-bottom:10px;">
+      <input type="checkbox" id="show-ref" checked> Show reference agonist
+    </label>
+    <div id="ref-ctrls">
+      <div class="ctrl-row">
+        <div class="ctrl-top">
+          <span class="ctrl-label">Operational efficacy (<em>τ</em>)</span>
+          <span class="ctrl-val" id="tau2-val" contenteditable="true" tabindex="0">100</span>
+        </div>
+        <input type="range" min="-2" max="3" step="0.01" id="tau2-s">
+        <div class="range-labels"><span>0.01</span><span>1000</span></div>
+      </div>
+      <div class="ctrl-row">
+        <div class="ctrl-top">
+          <span class="ctrl-label">Functional affinity (<em>K</em><sub>A</sub>, nM)</span>
+          <span class="ctrl-val" id="ka2-val" contenteditable="true" tabindex="0">100</span>
+        </div>
+        <input type="range" min="-3" max="5" step="0.01" id="ka2-s">
+        <div class="range-labels"><span>100,000 nM</span><span>0.001 nM</span></div>
+      </div>
+    </div>
+  </div>
+
+  <button class="reset-btn" id="reset-btn">↺ Reset to default parameters</button>
+</div>
+
+<!-- ══ RIGHT PANEL ══ -->
+<div class="right-panel">
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:2px;">
+    <div class="stat-group-label">Potency</div>
+    <div class="stat-group-label">Maximal response</div>
+    <div class="stat-group-label">Activity</div>
+  </div>
+
+  <div class="row-label">Primary agonist</div>
+  <div class="stat-grid" style="grid-template-columns:1fr 1fr 1fr;">
+    <div class="stat" style="border-left:3px solid #378ADD;"><div class="stat-label"><em>EC</em><sub>50</sub></div><div class="stat-num" id="ec50-out">—</div></div>
+    <div class="stat" style="border-left:3px solid #378ADD;"><div class="stat-label"><em>E</em><sub>max</sub></div><div class="stat-num" id="emax-out">—</div></div>
+    <div class="stat" style="border-left:3px solid #378ADD;"><div class="stat-label">Log(<em>τ</em>/<em>K</em><sub>A</sub>)</div><div class="stat-num" id="ltka1-out">—</div></div>
+  </div>
+
+  <div id="ref-stats-row">
+    <div class="row-label">Reference agonist</div>
+    <div class="stat-grid" style="grid-template-columns:1fr 1fr 1fr;">
+      <div class="stat" style="border-left:3px solid #D85A30;"><div class="stat-label"><em>EC</em><sub>50</sub></div><div class="stat-num" id="ec50-ref-out">—</div></div>
+      <div class="stat" style="border-left:3px solid #D85A30;"><div class="stat-label"><em>E</em><sub>max</sub></div><div class="stat-num" id="emax-ref-out">—</div></div>
+      <div class="stat" style="border-left:3px solid #D85A30;"><div class="stat-label">Log(<em>τ</em>/<em>K</em><sub>A</sub>)</div><div class="stat-num" id="ltka2-out">—</div></div>
+    </div>
+  </div>
+
+  <div id="delta-section">
+    <div class="delta-title">Relative activity (Primary versus reference agonist)</div>
+    <div class="stat-grid" style="grid-template-columns:1fr 2fr;">
+      <div class="stat" style="border-left:3px solid #C9A84C;"><div class="stat-label">ΔLog(<em>τ</em>/<em>K</em><sub>A</sub>)</div><div class="stat-num" id="dltka-out">—</div></div>
+      <div style="display:flex;align-items:center;padding:0 4px;">
+        <span style="font-size:11px;color:var(--color-text-tertiary);line-height:1.5;">Positive: primary has greater activity than reference. Negative: reference has greater activity.</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="position:relative;width:100%;height:280px;margin-top:8px;">
+    <canvas id="chart"></canvas>
+  </div>
+
+  <div class="legend">
+    <span class="leg-item">
+      <svg width="22" height="10" style="flex-shrink:0"><line x1="0" y1="5" x2="22" y2="5" stroke="#378ADD" stroke-width="2.5"/></svg>
+      Primary agonist response
+    </span>
+    <span class="leg-item" id="ref-leg">
+      <svg width="22" height="10" style="flex-shrink:0"><line x1="0" y1="5" x2="22" y2="5" stroke="#D85A30" stroke-width="2"/></svg>
+      Reference agonist response
+    </span>
+    <span class="leg-item" id="occ-leg">
+      <svg width="22" height="10" style="flex-shrink:0"><line x1="0" y1="5" x2="22" y2="5" stroke="#1D9E75" stroke-width="1.5" stroke-dasharray="5,4"/></svg>
+      Primary agonist receptor occupancy
+    </span>
+    <button class="toggle-btn active" id="occ-toggle">Hide receptor occupancy for primary agonist</button>
+    <button class="toggle-btn active" id="marker-toggle">Hide markers for potency and functional affinity</button>
+  </div>
+
+  <div class="signature">
+    <strong>By Dr Kiyan Afzali</strong>
+    Scientific Director, Consultant, Researcher, and Inventor<br>
+    PhD (Medicine | Pharmacology &amp; Drug Discovery) &middot; The University of Sydney<br><br>
+    &copy; 2026 Dr Kiyan Afzali. All rights reserved.<br><br>
+    <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;margin-bottom:6px;">
+      <img alt="Creative Commons Licence" style="height:22px;border:none;"
+        src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+      <span style="font-size:12px;font-weight:600;color:var(--color-text-secondary);">CC BY-NC-ND 4.0</span>
+    </a><br>
+    <span style="font-size:12px;color:var(--color-text-muted);line-height:1.6;">
+      Licensed under
+      <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank"
+        style="color:var(--color-accent);text-decoration:underline;">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0</a>.
+      You may share this tool with attribution, but may not use it commercially or create derivative works.
+    </span>
+  </div>
+</div>
+
+</div><!-- end layout -->
+</div><!-- end outer -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const EM=100, X_MIN=-12, X_MAX=-3;
+let showOcc=true, showMarkers=true;
+
+const state={tau:10,ka:10,rt:1,e0:0,n:1,tau2:100,ka2:100};
+const DEFAULTS={tau:10,ka:10,rt:1,e0:0,n:1,tau2:100,ka2:100};
+
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function fmtV(v){
+  if(v>=100)  return Math.round(v).toString();
+  if(v>=10)   return parseFloat(v.toFixed(1)).toString();
+  if(v>=1)    return parseFloat(v.toFixed(2)).toString();
+  if(v>=0.1)  return parseFloat(v.toFixed(3)).toString();
+  return parseFloat(v.toFixed(4)).toString();
+}
+
+const C={
+  tau:  {s2v:s=>Math.pow(10,+s),          v2s:v=>Math.log10(clamp(v,0.01,1000)),   min:0.01,  max:1000  },
+  ka:   {s2v:s=>Math.pow(10,2-(+s)),      v2s:v=>2-Math.log10(clamp(v,0.001,1e5)), min:0.001, max:100000},
+  rt:   {s2v:s=>Math.pow(10,+s),          v2s:v=>Math.log10(clamp(v,0.001,1000)),  min:0.001, max:1000  },
+  e0:   {s2v:s=>+s,                       v2s:v=>v,                                 min:0,     max:30    },
+  n:    {s2v:s=>parseFloat((+s).toFixed(1)),v2s:v=>v,                               min:0.3,   max:3     },
+  tau2: {s2v:s=>Math.pow(10,+s),          v2s:v=>Math.log10(clamp(v,0.01,1000)),   min:0.01,  max:1000  },
+  ka2:  {s2v:s=>Math.pow(10,2-(+s)),      v2s:v=>2-Math.log10(clamp(v,0.001,1e5)), min:0.001, max:100000},
+};
+const KEYS=['tau','ka','rt','e0','n','tau2','ka2'];
+
+function syncDom(){
+  KEYS.forEach(k=>{
+    document.getElementById(k+'-s').value=C[k].v2s(state[k]);
+    const el=document.getElementById(k+'-val');
+    if(document.activeElement!==el) el.textContent=fmtV(state[k]);
+  });
+}
+
+function opModel(A,tau,KA,E0,n){
+  if(A<=0) return E0;
+  return E0+(EM-E0)/(1+Math.pow((KA+A)/(tau*A),n));
+}
+function occ(A,KA){return A/(A+KA)*100;}
+function calcEmax(tau,E0,n){return E0+(EM-E0)/(1+Math.pow(1/tau,n));}
+function calcEC50(tau,KA,E0,n){
+  const half=(E0+calcEmax(tau,E0,n))/2;
+  let lo=1e-30,hi=1e10*KA;
+  for(let i=0;i<100;i++){const m=(lo+hi)/2;opModel(m,tau,KA,E0,n)<half?lo=m:hi=m;}
+  return (lo+hi)/2;
+}
+function fmtNM(nM){
+  if(nM<0.001) return nM.toFixed(5)+' nM';
+  if(nM<0.1)   return nM.toFixed(3)+' nM';
+  if(nM<10)    return nM.toFixed(2)+' nM';
+  if(nM<1000)  return nM.toFixed(1)+' nM';
+  return Math.round(nM)+' nM';
+}
+function fmt(v,d){return v.toFixed(d!=null?d:2);}
+
+const pts=[];
+for(let lm=X_MIN;lm<=X_MAX;lm=+(lm+0.1).toFixed(1)) pts.push(lm);
+const lbls=pts.map(lm=>lm.toFixed(1));
+function lmToPx(lm,x){return x.left+(lm-X_MIN)/(X_MAX-X_MIN)*(x.right-x.left);}
+
+function drawSubLabel(ctx,main,sub,cx,cy,color){
+  ctx.save(); ctx.fillStyle=color; ctx.textBaseline='alphabetic';
+  ctx.font='italic 10px sans-serif'; const mw=ctx.measureText(main).width;
+  ctx.font='8px sans-serif'; const sw=ctx.measureText(sub).width;
+  const sx=cx-(mw+sw)/2;
+  ctx.font='italic 10px sans-serif'; ctx.fillText(main,sx,cy);
+  ctx.font='8px sans-serif'; ctx.fillText(sub,sx+mw,cy+2);
+  ctx.restore();
+}
+
+const markerPlugin={
+  id:'markerLines',
+  afterDatasetsDraw(chart){
+    const opts=chart.options.plugins.markerLines;
+    if(!opts||!opts.markers||!opts.visible) return;
+    const{ctx,chartArea:{top,bottom},scales:{x}}=chart;
+    ctx.save();
+    opts.markers.forEach(m=>{
+      const lv=Math.log10(m.xM);
+      if(lv<X_MIN||lv>X_MAX) return;
+      const px=lmToPx(lv,x);
+      ctx.beginPath(); ctx.setLineDash([3,5]);
+      ctx.strokeStyle=m.color; ctx.lineWidth=1.2;
+      ctx.moveTo(px,top); ctx.lineTo(px,bottom); ctx.stroke(); ctx.setLineDash([]);
+      const ly=top+(m.labelOffset||6);
+      if(m.label==='EC50') drawSubLabel(ctx,'EC','50',px,ly,m.color);
+      else if(m.label==='KA') drawSubLabel(ctx,'K','A',px,ly,m.color);
+    });
+    ctx.restore();
+  }
+};
+Chart.register(markerPlugin);
+let ch=null;
+
+function update(){
+  const{tau,ka,rt,e0,n,tau2,ka2}=state;
+  const KA_M=ka*1e-9, KA2_M=ka2*1e-9;
+  const tauEff=tau*rt, tau2Eff=tau2*rt;
+  const showRef=document.getElementById('show-ref').checked;
+
+  document.getElementById('ref-ctrls').style.display    =showRef?'block':'none';
+  document.getElementById('ref-leg').style.display      =showRef?'flex':'none';
+  document.getElementById('ref-stats-row').style.display=showRef?'block':'none';
+  document.getElementById('delta-section').style.display=showRef?'block':'none';
+  document.getElementById('occ-leg').style.display      =showOcc?'flex':'none';
+
+  const mBtn=document.getElementById('marker-toggle');
+  mBtn.textContent=(showMarkers?'Hide ':'Show ')+'markers for potency'+(showOcc?' and functional affinity':'');
+
+  const respData=pts.map(lm=>opModel(Math.pow(10,lm),tauEff,KA_M,e0,n));
+  const occData =pts.map(lm=>occ(Math.pow(10,lm),KA_M));
+  const refData =showRef?pts.map(lm=>opModel(Math.pow(10,lm),tau2Eff,KA2_M,e0,n)):[];
+
+  const emax=calcEmax(tauEff,e0,n);
+  const ec50M=calcEC50(tauEff,KA_M,e0,n);
+  const emax2=showRef?calcEmax(tau2Eff,e0,n):null;
+  const ec50M2=showRef?calcEC50(tau2Eff,KA2_M,e0,n):null;
+  const ltka1=Math.log10(tauEff/KA_M);
+  const ltka2=Math.log10(tau2Eff/KA2_M);
+
+  document.getElementById('ec50-out').textContent    =fmtNM(ec50M*1e9);
+  document.getElementById('emax-out').textContent    =fmt(emax,1)+'%';
+  document.getElementById('ltka1-out').textContent   =fmt(ltka1,2);
+  document.getElementById('ec50-ref-out').textContent=showRef?fmtNM(ec50M2*1e9):'—';
+  document.getElementById('emax-ref-out').textContent=showRef?fmt(emax2,1)+'%':'—';
+  document.getElementById('ltka2-out').textContent   =showRef?fmt(ltka2,2):'—';
+  document.getElementById('dltka-out').textContent   =showRef?fmt(ltka1-ltka2,2):'—';
+
+  const markers=[{xM:ec50M,color:'rgba(55,138,221,0.9)',label:'EC50',labelOffset:6}];
+  if(showOcc) markers.push({xM:KA_M,color:'rgba(29,158,117,0.85)',label:'KA',labelOffset:20});
+  if(showRef&&ec50M2) markers.push({xM:ec50M2,color:'rgba(216,90,48,0.9)',label:'EC50',labelOffset:6});
+
+  const datasets=[
+    {label:'Primary agonist response',data:respData,borderColor:'#378ADD',backgroundColor:'transparent',borderWidth:2.5,pointRadius:0,tension:0.4,yAxisID:'yLeft'},
+    {label:'Primary agonist receptor occupancy',data:occData,borderColor:'#1D9E75',backgroundColor:'rgba(159,225,203,0.12)',borderWidth:1.5,borderDash:[5,4],pointRadius:0,tension:0.4,fill:true,yAxisID:'yRight',hidden:!showOcc}
+  ];
+  if(showRef) datasets.splice(1,0,{label:'Reference agonist response',data:refData,borderColor:'#D85A30',backgroundColor:'transparent',borderWidth:2,pointRadius:0,tension:0.4,yAxisID:'yLeft'});
+
+  if(ch){
+    ch.data.labels=lbls; ch.data.datasets=datasets;
+    ch.options.plugins.markerLines.markers=markers;
+    ch.options.plugins.markerLines.visible=showMarkers;
+    ch.options.scales.yRight.display=showOcc;
+    ch.update('none');
+  } else {
+    ch=new Chart(document.getElementById('chart'),{
+      type:'line',data:{labels:lbls,datasets},
+      options:{
+        responsive:true,maintainAspectRatio:false,animation:false,
+        plugins:{legend:{display:false},markerLines:{markers,visible:showMarkers},
+          tooltip:{callbacks:{title:i=>'10^'+i[0].label+' M',label:c=>' '+c.dataset.label+': '+fmt(c.raw,1)+'%'}}},
+        scales:{
+          x:{
+            ticks:{color:'#888',font:{size:12},autoSkip:false,
+              callback:(v,i)=>{const lm=pts[i];return lm!=null&&Math.abs(lm-Math.round(lm))<0.05?Math.round(lm).toString():''}},
+            grid:{display:false},
+            title:{display:true,text:'Log[Agonist (M)]',color:'#666',font:{size:13}}
+          },
+          yLeft:{type:'linear',position:'left',min:0,max:100,
+            ticks:{color:'#378ADD',font:{size:12},stepSize:10,callback:v=>v+'%'},
+            grid:{color:'rgba(128,128,128,0.1)'},
+            title:{display:true,text:'Response (%)',color:'#378ADD',font:{size:13}}},
+          yRight:{type:'linear',position:'right',display:showOcc,min:0,max:100,
+            ticks:{color:'#1D9E75',font:{size:12},stepSize:10,callback:v=>v+'%'},
+            grid:{drawOnChartArea:false},
+            title:{display:true,text:'Receptor Occupancy (%)',color:'#1D9E75',font:{size:13}}}
+        }
+      }
+    });
+  }
+}
+
+KEYS.forEach(k=>{
+  document.getElementById(k+'-s').addEventListener('input',function(){
+    state[k]=C[k].s2v(+this.value);
+    const el=document.getElementById(k+'-val');
+    if(document.activeElement!==el) el.textContent=fmtV(state[k]);
+    update();
+  });
+  const el=document.getElementById(k+'-val');
+  el.addEventListener('keydown',function(e){
+    if(e.key==='Enter'){e.preventDefault();this.blur();}
+    if(e.key==='Escape'){this.textContent=fmtV(state[k]);this.blur();}
+  });
+  el.addEventListener('blur',function(){
+    const v=parseFloat(this.textContent);
+    if(!isNaN(v)) state[k]=clamp(v,C[k].min,C[k].max);
+    this.textContent=fmtV(state[k]);
+    document.getElementById(k+'-s').value=C[k].v2s(state[k]);
+    update();
+  });
+  el.addEventListener('focus',function(){
+    const r=document.createRange(); r.selectNodeContents(this);
+    const s=window.getSelection(); s.removeAllRanges(); s.addRange(r);
+  });
+});
+
+document.getElementById('occ-toggle').addEventListener('click',function(){
+  showOcc=!showOcc;
+  this.textContent=(showOcc?'Hide':'Show')+' receptor occupancy for primary agonist';
+  this.classList.toggle('active',showOcc); update();
+});
+document.getElementById('marker-toggle').addEventListener('click',function(){
+  showMarkers=!showMarkers;
+  this.classList.toggle('active',showMarkers); update();
+});
+document.getElementById('show-ref').addEventListener('change',update);
+document.getElementById('reset-btn').addEventListener('click',function(){
+  Object.assign(state,DEFAULTS);
+  document.getElementById('show-ref').checked=true;
+  syncDom(); update();
+});
+
+syncDom();
+update();
+</script>
+</body>
+</html>

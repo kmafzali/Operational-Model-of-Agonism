@@ -119,13 +119,15 @@
   /* STATS SIDEBAR */
   .stats-sidebar { display: flex; flex-direction: column; gap: 0; }
   .sb-section-head {
-    font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+    font-size: 12px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase;
     margin-bottom: 6px; margin-top: 6px; padding-bottom: 5px;
     border-bottom: 2px solid currentColor; opacity: 0.9;
   }
   .sb-group-label {
-    font-size: 10px; font-weight: 700; color: var(--txt-muted);
-    letter-spacing: .06em; text-transform: uppercase; margin: 10px 0 4px;
+    font-size: 11px; font-weight: 800; color: #1e293b;
+    letter-spacing: .05em; text-transform: uppercase;
+    margin: 10px 0 4px; padding: 3px 0;
+    border-bottom: 1px solid var(--border-sec);
   }
   .sb-row { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 5px; }
   .sb-stat {
@@ -134,7 +136,7 @@
     transition: box-shadow .15s;
   }
   .sb-stat:hover { box-shadow: var(--shadow-sm); }
-  .sb-label { font-size: 12px; font-weight: 600; color: var(--txt-sec); margin-bottom: 3px; }
+  .sb-label { font-size: 12px; font-weight: 700; color: var(--txt-sec); margin-bottom: 3px; }
   .sb-val   { font-size: 15px; font-weight: 700; color: var(--txt); font-family: var(--mono); }
   .sb-note  { font-size: 10px; color: var(--txt-muted); line-height: 1.5; margin-bottom: 6px; font-style: italic; }
 
@@ -322,7 +324,7 @@
           <div class="sb-val" id="emax-out">—</div>
         </div>
       </div>
-      <div class="sb-stat" style="border-left:2px solid #378ADD;margin-bottom:10px;">
+      <div class="sb-stat" style="border-left:2px solid #378ADD;margin-bottom:10px;text-align:center;">
         <div class="sb-label">Log(<em>τ</em>/<em>K</em><sub>A</sub>)</div>
         <div class="sb-val" id="ltka1-out">—</div>
       </div>
@@ -340,7 +342,7 @@
             <div class="sb-val" id="emax-ref-out">—</div>
           </div>
         </div>
-        <div class="sb-stat" style="border-left:2px solid #D85A30;margin-bottom:10px;">
+        <div class="sb-stat" style="border-left:2px solid #D85A30;margin-bottom:10px;text-align:center;">
           <div class="sb-label">Log(<em>τ</em>/<em>K</em><sub>A</sub>)</div>
           <div class="sb-val" id="ltka2-out">—</div>
         </div>
@@ -768,7 +770,22 @@ function update(){
       options:{
         responsive:true,maintainAspectRatio:false,animation:false,
         plugins:{legend:{display:false},markerLines:{markers,visible:showMarkers},
-          tooltip:{callbacks:{title:i=>'10^'+i[0].label+' M',label:c=>' '+c.dataset.label+': '+fmt(c.raw,1)+'%'}}},
+          tooltip:{callbacks:{
+            title:function(items){
+              const lm = parseFloat(items[0].label);
+              const M = Math.pow(10, lm);
+              const nM = M * 1e9;
+              let conc;
+              if(nM < 0.0001)      conc = (M*1e12).toFixed(2)+' pM';
+              else if(nM < 0.1)    conc = (nM*1000).toFixed(2)+' pM';
+              else if(nM < 1)      conc = nM.toFixed(3)+' nM';
+              else if(nM < 1000)   conc = nM.toFixed(1)+' nM';
+              else if(nM < 1e6)    conc = (nM/1000).toFixed(2)+' μM';
+              else                 conc = (nM/1e6).toFixed(2)+' mM';
+              return conc;
+            },
+            label:c=>' '+c.dataset.label+': '+fmt(c.raw,1)+'%'
+          }}},
         scales:{
           x:{
             ticks:{
